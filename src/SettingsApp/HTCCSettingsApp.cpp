@@ -270,8 +270,14 @@ static void OpenXRGUI() {
       HTCC::Config::SavePinchToClick();
     }
 
-    if (ToggleSwitch(&HTCC::Config::PinchToScroll).Caption("Pinch to scroll")) {
+    if (ToggleSwitch(&HTCC::Config::PinchToScroll)
+        .Caption("Pinch to scroll")) {
       HTCC::Config::SavePinchToScroll();
+    }
+
+    if (ToggleSwitch(&HTCC::Config::GrabMoveToScroll)
+        .Caption("Grab and move to scroll")) {
+      HTCC::Config::SaveGrabMoveToScroll();
     }
   }
 
