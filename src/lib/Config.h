@@ -66,6 +66,7 @@ enum class HandTrackingHands : DWORD {
   IT(XrHandJointEXT, HandTrackingAimJoint, XR_HAND_JOINT_INDEX_PROXIMAL_EXT) \
   IT(bool, PinchToClick, true) \
   IT(bool, PinchToScroll, true) \
+  IT(bool, GrabMoveToScroll, false) \
   IT(uint16_t, ShortPressLongPressMilliseconds, 200) \
   IT(uint16_t, ScrollWheelDelayMilliseconds, 600) \
   IT(uint16_t, ScrollWheelIntervalMilliseconds, 50) \
