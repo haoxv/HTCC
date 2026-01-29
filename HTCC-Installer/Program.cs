@@ -39,7 +39,8 @@ var command = new RootCommand
 };
 command.SetAction(parseResult => CreateInstaller(parseResult.GetValue(inputRootArg)!,
     parseResult.GetValue(signingKeyArg), parseResult.GetValue(timestampServerArg), parseResult.GetValue(stampFileArg)));
-return await new CommandLineConfiguration(command).InvokeAsync(args);
+
+return await command.Parse(args).InvokeAsync();
 
 async Task SetProjectVersionFromJson(ManagedProject project, DirectoryInfo inputRoot)
 {
