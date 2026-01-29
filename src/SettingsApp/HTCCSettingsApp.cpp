@@ -270,13 +270,12 @@ static void OpenXRGUI() {
       HTCC::Config::SavePinchToClick();
     }
 
-    if (ToggleSwitch(&HTCC::Config::PinchToScroll)
-        .Caption("Pinch to scroll")) {
+    if (ToggleSwitch(&HTCC::Config::PinchToScroll).Caption("Pinch to scroll")) {
       HTCC::Config::SavePinchToScroll();
     }
 
     if (ToggleSwitch(&HTCC::Config::GrabMoveToScroll)
-        .Caption("Grab and move to scroll")) {
+          .Caption("Grab and move to scroll")) {
       HTCC::Config::SaveGrabMoveToScroll();
     }
   }
@@ -363,14 +362,18 @@ static void LicensesDialogContent() {
   };
   static const auto products = std::array {
     Product {
-      "Hand Tracked Cockpit Clicking (HTCC)", licenses.SelfAsStringView()},
-    Product {"Compressed-Embed", licenses.CompressedEmbedAsStringView()},
-    Product {"DirectXMath", licenses.DirectXMathAsStringView()},
-    Product {"DirectXTK", licenses.DirectXTKAsStringView()},
-    Product {"FredEmmott::GUI", licenses.FUIAsStringView()},
-    Product {"OpenXR SDK", licenses.OpenXRAsStringView()},
-    Product {"Windows Implementation Library", licenses.WILAsStringView()},
-    Product {"Yoga", licenses.YogaAsStringView()},
+      "Hand Tracked Cockpit Clicking (HTCC)",
+      licenses.Yoga<std::string_view>()},
+    Product {"Compressed-Embed", licenses.CompressedEmbed<std::string_view>()},
+    Product {"DirectXMath", licenses.DirectXMath<std::string_view>()},
+    Product {"DirectXTK", licenses.DirectXTK<std::string_view>()},
+    Product {"FredEmmott::GUI", licenses.FUI<std::string_view>()},
+    Product {"OpenXR SDK", licenses.OpenXR<std::string_view>()},
+    Product {
+      "Windows Implementation Library",
+      licenses.WIL<std::string_view>(),
+    },
+    Product {"Yoga", licenses.Yoga<std::string_view>()},
   };
 
   const auto layout = BeginVStackPanel().Styled(Style().Gap(12)).Scoped();
