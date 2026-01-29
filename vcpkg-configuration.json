@@ -1,8 +1,12 @@
 {
+  "default-registry": {
+    "kind": "builtin",
+    "baseline": "66c0373dc7fca549e5803087b9487edfe3aca0a1"
+  },
   "registries": [
     {
       "kind": "git",
-      "baseline": "cf71d7c7de0125a89e5ee58bac92fe8875deb474",
+      "baseline": "1737842ae3bed6d19df17838fc293b177fe9c5ff",
       "repository": "https://github.com/fredemmott/vcpkg-registry",
       "packages": [
         "fredemmott-gui",
