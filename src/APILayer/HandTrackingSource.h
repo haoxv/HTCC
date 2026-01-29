@@ -45,7 +45,7 @@ class HandTrackingSource final : public InputSource {
 
     ActionState mRawActions {};
     XrTime mRawActionsSince {};
-    
+
     // --- Added for grab‑and‑move scroll ---
     float mLastScrollY = 0.0f;
     bool mScrolling = false;
@@ -59,6 +59,7 @@ class HandTrackingSource final : public InputSource {
 
   void InitHandTracker(Hand* hand);
   void UpdateHand(const FrameInfo&, Hand* hand);
+  static void UpdatePinchAndDragScrolling(Hand* hand, InputState& state);
   std::tuple<XrPosef, XrVector2f> RaycastPose(
     const FrameInfo&,
     const XrPosef& pose);

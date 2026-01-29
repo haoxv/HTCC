@@ -144,6 +144,42 @@ void HandTrackingSource::KeepAlive(XrHandEXT handID, const FrameInfo& info) {
   hand.mLastKeepAliveAt = info.mNow;
 }
 
+void HandTrackingSource::UpdatePinchAndDragScrolling(
+  Hand* hand,
+  InputState& state) {
+  const bool pinchActive = state.mActions.mPrimary;
+  if (!pinchActive) {
+    // Pinch released → stop scrolling
+    hand->mScrolling = false;
+    hand->mLastScrollY = 0.0f;
+    return;
+  }
+
+  if (!state.mPose) {
+    return;
+  }
+
+  const float currentY = state.mPose->position.y;
+  const bool alreadyScrolling = !hand->mScrolling;
+  if (!alreadyScrolling) {
+    hand->mScrolling = true;
+    hand->mLastScrollY = currentY;
+  } else {
+    float delta = currentY - hand->mLastScrollY;
+
+    // Apply grab-and-move scroll scale for different applications
+    delta *= Config::GrabMoveScrollScale;
+
+    constexpr float ScrollJitterThreshold = 0.01f;
+    if (delta > ScrollJitterThreshold) {
+      state.mActions.mValueChange = ActionState::ValueChange::Increase;
+      hand->mLastScrollY = currentY;
+    } else if (delta < -ScrollJitterThreshold) {
+      state.mActions.mValueChange = ActionState::ValueChange::Decrease;
+      hand->mLastScrollY = currentY;
+    }
+  }
+}
 void HandTrackingSource::UpdateHand(const FrameInfo& frameInfo, Hand* hand) {
   InitHandTracker(hand);
 
@@ -346,39 +382,8 @@ void HandTrackingSource::UpdateHand(const FrameInfo& frameInfo, Hand* hand) {
       break;
   }
 
-// --- Grab-and-Move Scroll Gesture ---
   if (Config::GrabMoveToScroll) {
-    bool pinchActive = state.mActions.mPrimary;
-
-    if (pinchActive && state.mPose) {
-      float currentY = state.mPose->position.y;
-
-      if (!hand->mScrolling) {
-        // Start scroll mode
-        hand->mScrolling = true;
-        hand->mLastScrollY = currentY;
-      } else {
-        float delta = currentY - hand->mLastScrollY;
-
-        // Apply grab-and-move scroll scale for different applications
-        delta *= Config::GrabMoveScrollScale;
-
-        // Threshold to avoid jitter
-        constexpr float scrollThreshold = 0.01f;
-
-        if (delta > scrollThreshold) {
-          state.mActions.mValueChange = ActionState::ValueChange::Increase;
-          hand->mLastScrollY = currentY;
-        } else if (delta < -scrollThreshold) {
-          state.mActions.mValueChange = ActionState::ValueChange::Decrease;
-          hand->mLastScrollY = currentY;
-        }
-      }
-    } else {
-      // Pinch released → stop scrolling
-      hand->mScrolling = false;
-      hand->mLastScrollY = 0.0f;
-    }
+    UpdatePinchAndDragScrolling(hand, state);
   }
 }
 
