@@ -82,6 +82,11 @@ async Task SetProjectVersionFromJson(ManagedProject project, DirectoryInfo input
 async Task<int> CreateInstaller(DirectoryInfo inputRoot, string? signingKeyId, string? timestampServer,
     FileInfo? stampFile)
 {
+    // Don't call `signtool` separately for each individual file, which can lead to a PIN prompt from each
+    // file - opt-in in WixSharp v1.12.1 (latest as of 2026-01-29) - see
+    // https://github.com/oleg-shilo/wixsharp/issues/1887
+    Compiler.AutoGeneration.PreferBatchSigning = true;
+
     if (!System.IO.File.Exists($"{inputRoot}/bin/HTCCSettings.exe"))
     {
         Console.WriteLine($"Cannot find bin/HTCCSettings.exe in INPUT_ROOT ({inputRoot.FullName})");
